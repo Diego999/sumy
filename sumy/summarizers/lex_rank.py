@@ -45,7 +45,7 @@ class LexRankSummarizer(AbstractSummarizer):
         scores = self.power_method(matrix, self.epsilon)
         ratings = dict(zip(document.sentences, scores))
 
-        return self._get_best_sentences(document.sentences, sentences_count, ratings)
+        return self._get_best_sentences(document.sentences, sentences_count, ratings), matrix, ratings, scores
 
     @staticmethod
     def _ensure_dependencies_installed():

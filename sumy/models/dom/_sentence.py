@@ -9,16 +9,20 @@ from ..._compat import to_unicode, to_string, unicode_compatible
 
 @unicode_compatible
 class Sentence(object):
-    __slots__ = ("_text", "_cached_property_words", "_tokenizer", "_is_heading",)
+    __slots__ = ("_text", "_cached_property_words", "_tokenizer", "_is_heading", "_tokens")
 
-    def __init__(self, text, tokenizer, is_heading=False):
+    def __init__(self, text, tokenizer, is_heading=False, tokens=None):
         self._text = to_unicode(text).strip()
         self._tokenizer = tokenizer
         self._is_heading = bool(is_heading)
+        self._tokens = tokens
 
     @cached_property
     def words(self):
-        return self._tokenizer.to_words(self._text)
+        if self._tokens is None:
+            return self._tokenizer.to_words(self._text)
+        else:
+            return self._tokens
 
     @property
     def is_heading(self):

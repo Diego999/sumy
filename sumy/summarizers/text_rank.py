@@ -35,8 +35,8 @@ class TextRankSummarizer(AbstractSummarizer):
         if not document.sentences:
             return ()
 
-        ratings = self.rate_sentences(document)
-        return self._get_best_sentences(document.sentences, sentences_count, ratings)
+        ratings, matrix, ranks = self.rate_sentences(document)
+        return self._get_best_sentences(document.sentences, sentences_count, ratings), matrix, ratings, ranks
 
     @staticmethod
     def _ensure_dependencies_installed():
@@ -46,7 +46,7 @@ class TextRankSummarizer(AbstractSummarizer):
     def rate_sentences(self, document):
         matrix = self._create_matrix(document)
         ranks = self.power_method(matrix, self.epsilon)
-        return {sent: rank for sent, rank in zip(document.sentences, ranks)}
+        return {sent: rank for sent, rank in zip(document.sentences, ranks)}, matrix, ranks
 
     def _create_matrix(self, document):
         """Create a stochastic matrix for TextRank.
